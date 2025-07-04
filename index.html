@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>QA Frontend</title>
+</head>
+<body>
+  <h1>Ask your question</h1>
+  <textarea id="query" rows="4" cols="50" placeholder="Type your question here"></textarea><br />
+  <button onclick="askQuestion()">Ask</button>
+
+  <h2>Answer:</h2>
+  <pre id="answer"></pre>
+
+  <script>
+    async function askQuestion() {
+      const query = document.getElementById("query").value;
+      if (!query) {
+        alert("Please enter a question.");
+        return;
+      }
+      const response = await fetch("http://127.0.0.1:8000/ask", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query })
+      });
+      if (response.ok) {
+        const data = await response.json();
+        document.getElementById("answer").textContent = data.answer;
+      } else {
+        document.getElementById("answer").textContent = "Error: " + response.statusText;
+      }
+    }
+  </script>
+</body>
+</html>
